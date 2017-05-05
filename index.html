@@ -236,28 +236,31 @@ library(leaflet); library(RCurl); library(lubridate)</code></pre>
 <pre class="r"><code>gLog &lt;- read_csv(&quot;./data/gas_log_data.csv&quot;)</code></pre>
 <pre class="r"><code># check data frame
 glimpse(gLog)</code></pre>
-<pre><code>## Observations: 1
-## Variables: 13
-## $ Timestamp        &lt;chr&gt; &quot;5/5/2017 9:45:51&quot;
-## $ date             &lt;date&gt; 2017-05-05
-## $ time             &lt;chr&gt; &quot;7H 53M 0S&quot;
-## $ location         &lt;chr&gt; &quot;Raceway, 1555 NJ-27, Edison, NJ 08817&quot;
-## $ Latitude         &lt;dbl&gt; 40.50701
-## $ Longitude        &lt;dbl&gt; -74.41436
-## $ milesDrivenTank  &lt;int&gt; 247
-## $ milesDrivenTotal &lt;int&gt; 137414
-## $ pricePerGallon   &lt;dbl&gt; 2.859
-## $ gallonsPurchased &lt;dbl&gt; 17.998
-## $ totalPrice       &lt;dbl&gt; 51.46
-## $ monthNum         &lt;int&gt; 5
-## $ monthName        &lt;chr&gt; &quot;may&quot;</code></pre>
+<pre><code>## Observations: 4
+## Variables: 14
+## $ Timestamp        &lt;chr&gt; &quot;5/5/2017 9:45:51&quot;, &quot;5/5/2017 14:23:45&quot;, &quot;5/5...
+## $ date             &lt;date&gt; 2017-05-05, 2017-03-29, 2017-04-09, 2016-10-21
+## $ time             &lt;chr&gt; &quot;7H 53M 0S&quot;, &quot;19H 21M 0S&quot;, &quot;12H 16M 0S&quot;, &quot;19H...
+## $ location         &lt;chr&gt; &quot;Raceway, 1555 NJ-27, Edison, NJ 08817&quot;, &quot;Luk...
+## $ Latitude         &lt;dbl&gt; 40.50701, 40.50107, 40.50107, 40.50107
+## $ Longitude        &lt;dbl&gt; -74.41436, -74.42207, -74.42207, -74.42207
+## $ milesDrivenTank  &lt;int&gt; 247, NA, NA, NA
+## $ milesDrivenTotal &lt;int&gt; 137414, NA, NA, NA
+## $ pricePerGallon   &lt;dbl&gt; 2.859, 2.199, 2.359, 2.039
+## $ gallonsPurchased &lt;dbl&gt; 17.998, 19.378, 16.705, 19.301
+## $ totalPrice       &lt;dbl&gt; 51.46, 42.61, 39.41, 39.35
+## $ monthNum         &lt;int&gt; 5, 3, 4, 10
+## $ monthName        &lt;chr&gt; &quot;may&quot;, &quot;march&quot;, &quot;april&quot;, &quot;oct&quot;
+## $ year             &lt;int&gt; 2017, 2017, 2017, 2016</code></pre>
 <pre class="r"><code># Total miles driven as a function of time 
 ggplot(gLog, aes(x = date, y = milesDrivenTotal, 
                  color = monthName, size = milesDrivenTank)) + 
     geom_point()</code></pre>
+<pre><code>## Warning: Removed 3 rows containing missing values (geom_point).</code></pre>
 <p><img src="index_files/figure-html/plotTotalMiles-1.png" width="672" /></p>
 <pre class="r"><code>ggplot(gLog, aes(x = date, y = milesDrivenTank, color = pricePerGallon)) + 
     geom_point()</code></pre>
+<pre><code>## Warning: Removed 3 rows containing missing values (geom_point).</code></pre>
 <p><img src="index_files/figure-html/plotTotalMiles-2.png" width="672" /></p>
 
 

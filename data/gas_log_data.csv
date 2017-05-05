@@ -1,2 +1,5 @@
-"Timestamp","date","time","location","Latitude","Longitude","milesDrivenTank","milesDrivenTotal","pricePerGallon","gallonsPurchased","totalPrice","monthNum","monthName"
-"5/5/2017 9:45:51",2017-05-05,7H 53M 0S,"Raceway, 1555 NJ-27, Edison, NJ 08817",40.5070116,-74.4143646,247,137414,2.859,17.998,51.46,5,"may"
+"Timestamp","date","time","location","Latitude","Longitude","milesDrivenTank","milesDrivenTotal","pricePerGallon","gallonsPurchased","totalPrice","monthNum","monthName","year"
+"5/5/2017 9:45:51",2017-05-05,7H 53M 0S,"Raceway, 1555 NJ-27, Edison, NJ 08817",40.5070116,-74.4143646,247,137414,2.859,17.998,51.46,5,"may",2017
+"5/5/2017 14:23:45",2017-03-29,19H 21M 0S,"Lukoil 702 raritan ave, highland park NJ 08904",40.5010671,-74.4220661,NA,NA,2.199,19.378,42.61,3,"march",2017
+"5/5/2017 14:25:26",2017-04-09,12H 16M 0S,"Lukoil 702 raritan ave highland park NJ 08904",40.5010671,-74.4220661,NA,NA,2.359,16.705,39.41,4,"april",2017
+"5/5/2017 14:26:47",2016-10-21,19H 1M 0S,"lukoil 702 raritan ave highland park nj 08904",40.5010671,-74.4220661,NA,NA,2.039,19.301,39.35,10,"oct",2016

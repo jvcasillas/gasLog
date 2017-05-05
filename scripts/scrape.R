@@ -40,10 +40,12 @@ my_months <- c("1" = "jan",
 
 gLog <- gLog %>% 
           mutate(., 
-                 date = dmy(gLog$date), 
+                 date = mdy(gLog$date), 
                  time = hms(gLog$time), 
                  monthNum = as.numeric(substr(date, start = 6, stop = 7)), 
-                 monthName = my_months[monthNum])
+                 monthName = my_months[monthNum], 
+                 year = as.numeric(substr(date, start = 1, stop = 4)))
+
 
 # write table
 write.table(gLog, "./data/gas_log_data.csv", row.names = F, quote = T, sep = ",")

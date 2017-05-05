@@ -1,0 +1,21 @@
+---
+title: "Gas Log"
+---
+
+
+```{r echo=FALSE}
+library(knitr)
+read_chunk('./scripts/analysis.R')
+```
+
+```{r, 'libraries', echo=TRUE, message=FALSE, warning=FALSE}
+```
+
+```{r, 'load', echo=TRUE, message=FALSE, warning=FALSE}
+```
+
+```{r, 'desc', echo=TRUE, message=FALSE, warning=FALSE}
+```
+
+```{r, 'plotTotalMiles', echo=TRUE}
+```

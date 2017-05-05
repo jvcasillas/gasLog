@@ -1,0 +1,20 @@
+{
+    "collab_server" : "",
+    "contents" : "## @knitr libraries\nlibrary(googlesheets); library(tidyverse); \nlibrary(leaflet); library(RCurl); library(lubridate)\n\n\n## @knitr load \ngLog <- read_csv(\"./data/gas_log_data.csv\")\n\n## @knitr desc\n\n# check data frame\nglimpse(gLog)\n\n\n\n## @knitr plotTotalMiles\n\n# Total miles driven as a function of time \nggplot(gLog, aes(x = date, y = milesDrivenTotal, \n\t\t\t\t color = monthName, size = milesDrivenTank)) + \n\tgeom_point()\n\nggplot(gLog, aes(x = date, y = milesDrivenTank, color = pricePerGallon)) + \n\tgeom_point()\n\n\n## @knitr plot\n# plot it\nleaflet(data = gLog, width = 910, height = 500) %>% \n  setView(lat = 40, lng = -74, zoom = 8) %>%\n  addTiles() %>%\n  addMarkers(~Longitude, ~Latitude, popup = ~as.character(location))\n\n## @knitr plotMobile\n# plot it\nleaflet(data = gLog, width = 350, height = 450) %>% \n  setView(lat = 40, lng = -74, zoom = 8) %>%\n  addTiles() %>%\n  addMarkers(~Longitude, ~Latitude, popup = ~as.character(location))\n\n## @knitr table\nlibrary(DT)\ngLog %>% \n\tdatatable(callback = JS(\"return table;\"))\n\n",
+    "created" : 1494005316573.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3358265862",
+    "id" : "FBE2007D",
+    "lastKnownWriteTime" : 1494005818,
+    "last_content_update" : 1494005818866,
+    "path" : "~/code/r/gasLog/scripts/analysis.R",
+    "project_path" : "scripts/analysis.R",
+    "properties" : {
+    },
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

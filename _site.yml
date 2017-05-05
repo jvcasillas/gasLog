@@ -1,0 +1,26 @@
+name: "Gas Log"
+output_dir: "."
+navbar:
+  title: "Gas Log"
+  left: 
+    - text: "home"
+      icon: fa-home
+      href: index.html
+    - text: "about"
+      icon: fa-search
+      href: about.html
+    - text: "form"
+      icon: fa-puzzle-piece
+      href: form.html
+  right: 
+    - icon: glyphicon-envelope
+      href: mailto:joseph.casillas@rutgers.edu
+    - icon: fa-twitter
+      href: http://twitter.com/jvcasill/
+    - icon: fa-github
+      href: http://github.com/jvcasillas/
+
+output:
+  html_document:
+    theme: readable
+    highlight: textmate

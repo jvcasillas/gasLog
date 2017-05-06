@@ -17,11 +17,15 @@ library(leaflet); library(RCurl); library(lubridate)
 glimpse(my_sheets)
 
 # Identify sheet
-gLogIdent <- gs_title("gasLog (Responses)")
+gLogIdent    <- gs_title("gasLog (Responses)")
+gLogOldIdent <- gs_title("gas_log_data_old")
 
 # Read sheet into DF
 gLog <- gLogIdent %>%
   gs_read(ws = "Form Responses 1")
+
+gLogOld <- gLogOldIdent %>%
+  gs_read(ws = "gas_log_data_old.csv")
 
 
 # general tidying
@@ -46,6 +50,17 @@ gLog <- gLog %>%
                  monthName = my_months[monthNum], 
                  year = as.numeric(substr(date, start = 1, stop = 4)))
 
+gLogOld <- gLogOld %>%
+            mutate(., 
+                   date = mdy(gLogOld$date), 
+                   monthNum = as.numeric(substr(date, start = 6, stop = 7)), 
+                   monthName = my_months[monthNum], 
+                   year = as.numeric(substr(date, start = 1, stop = 4)))
+
+glimpse(gLog)
+glimpse(gLogOld)
+
+gLogFinal <- rbind(gLogOld, gLog)
 
 # write table
-write.table(gLog, "./data/gas_log_data.csv", row.names = F, quote = T, sep = ",")
+write.table(gLogFinal, "./data/gas_log_data.csv", row.names = F, quote = T, sep = ",")

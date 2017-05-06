@@ -1,5 +1,5 @@
 ## @knitr libraries
-library(googlesheets); library(tidyverse); 
+library(googlesheets); library(tidyverse); library(DT)
 library(leaflet); library(RCurl); library(lubridate)
 
 
@@ -18,28 +18,23 @@ glimpse(gLog)
 # Total miles driven as a function of time 
 ggplot(gLog, aes(x = date, y = milesDrivenTotal, 
 				 color = monthName, size = milesDrivenTank)) + 
-	geom_point()
+	geom_point() + 
+	theme_bw()
 
 ggplot(gLog, aes(x = date, y = milesDrivenTank, color = pricePerGallon)) + 
-	geom_point()
+	geom_point() + 
+	theme_bw()
 
 
-## @knitr plot
+## @knitr plotMaps
 # plot it
 leaflet(data = gLog, width = 910, height = 500) %>% 
-  setView(lat = 40, lng = -74, zoom = 8) %>%
+  setView(lat = 36, lng = -88, zoom = 4) %>%
   addTiles() %>%
   addMarkers(~Longitude, ~Latitude, popup = ~as.character(location))
 
-## @knitr plotMobile
-# plot it
-leaflet(data = gLog, width = 350, height = 450) %>% 
-  setView(lat = 40, lng = -74, zoom = 8) %>%
-  addTiles() %>%
-  addMarkers(~Longitude, ~Latitude, popup = ~as.character(location))
 
 ## @knitr table
-library(DT)
 gLog %>% 
 	datatable(callback = JS("return table;"))
 

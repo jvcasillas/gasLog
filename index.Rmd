@@ -17,14 +17,25 @@ read_chunk('./scripts/analysis.R')
 ```{r, 'desc', echo=TRUE, message=FALSE, warning=FALSE}
 ```
 
+```{r, 'table', echo=TRUE, fig.align='center',fig.retina=2, warning=FALSE, results='asis'}
+```
+
 ```{r, 'plotTotalMiles', echo=TRUE, fig.align='center', fig.width=10, fig.height=5, fig.retina=2, warning=FALSE}
 ```
 
-```{r, 'plotMaps', echo=TRUE, fig.align='center', fig.width=10, fig.height=5, fig.retina=2, warning=FALSE, results='asis'}
+```{r, 'myMPG', echo=TRUE, fig.align='center', fig.width=10, fig.height=5, fig.retina=2, warning=FALSE}
 ```
 
-```{r, 'table', echo=TRUE, fig.align='center',fig.retina=2, warning=FALSE, results='asis'}
+```{r, 'plotMapUS1', echo=TRUE, fig.align='center', fig.width=10, fig.height=5, fig.retina=2, warning=FALSE, results='asis'}
 ```
+
+```{r, 'plotMapUS2', echo=TRUE, fig.align='center', fig.retina=2, warning=FALSE, results='asis'}
+```
+
+```{r, 'plotMapNJ1', echo=TRUE, fig.align='center', fig.retina=2, warning=FALSE, results='asis'}
+```
+
+
 
 
 

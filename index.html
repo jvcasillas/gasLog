@@ -31,10 +31,6 @@
 <script src="site_libs/Proj4Leaflet-0.7.2/proj4-compressed.js"></script>
 <script src="site_libs/Proj4Leaflet-0.7.2/proj4leaflet.js"></script>
 <script src="site_libs/leaflet-binding-1.1.0/leaflet.js"></script>
-<script src="site_libs/datatables-binding-0.2/datatables.js"></script>
-<link href="site_libs/dt-core-1.10.12/css/jquery.dataTables.min.css" rel="stylesheet" />
-<link href="site_libs/dt-core-1.10.12/css/jquery.dataTables.extra.css" rel="stylesheet" />
-<script src="site_libs/dt-core-1.10.12/js/jquery.dataTables.min.js"></script>
 <link href="site_libs/font-awesome-4.5.0/css/font-awesome.min.css" rel="stylesheet" />
 
 <style type="text/css">code{white-space: pre;}</style>
@@ -245,7 +241,8 @@ $(document).ready(function () {
 
 
 <pre class="r"><code>library(googlesheets); library(tidyverse); library(DT)
-library(leaflet); library(RCurl); library(lubridate)</code></pre>
+library(leaflet); library(RCurl); library(lubridate)
+library(ggmap)</code></pre>
 <pre class="r"><code>gLog &lt;- read_csv(&quot;./data/gas_log_data.csv&quot;)</code></pre>
 <pre class="r"><code># check data frame
 glimpse(gLog)</code></pre>
@@ -265,6 +262,675 @@ glimpse(gLog)</code></pre>
 ## $ monthNum         &lt;int&gt; 6, 7, 7, 7, 8, 8, 8, 8, 12, 1, 2, 3, 3, 4, 4,...
 ## $ monthName        &lt;chr&gt; &quot;june&quot;, &quot;july&quot;, &quot;july&quot;, &quot;july&quot;, &quot;aug&quot;, &quot;aug&quot;,...
 ## $ year             &lt;int&gt; 2015, 2015, 2015, 2015, 2015, 2015, 2015, 201...</code></pre>
+<pre class="r"><code>#gLog %&gt;% 
+#   datatable(callback = JS(&quot;return table;&quot;))
+
+gLog %&gt;% 
+    select(., date, location, milesDrivenTank:totalPrice) %&gt;%
+    knitr::kable(.)</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">date</th>
+<th align="left">location</th>
+<th align="right">milesDrivenTank</th>
+<th align="right">milesDrivenTotal</th>
+<th align="right">pricePerGallon</th>
+<th align="right">gallonsPurchased</th>
+<th align="right">totalPrice</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">2015-06-13</td>
+<td align="left">CIRCLE K 02939 TUCSON, AZ</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">3.79</td>
+</tr>
+<tr class="even">
+<td align="left">2015-07-25</td>
+<td align="left">Mobil, 220 Court St, Middlebury, VT 05753</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">6.42</td>
+</tr>
+<tr class="odd">
+<td align="left">2015-07-24</td>
+<td align="left">Shell, 25 Court St, Middlebury, VT 05753</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">45.56</td>
+</tr>
+<tr class="even">
+<td align="left">2015-07-11</td>
+<td align="left">Mobil, 220 Court St, Middlebury, VT 05753</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">18.12</td>
+</tr>
+<tr class="odd">
+<td align="left">2015-08-20</td>
+<td align="left">Shell, 25 Court St, Middlebury, VT 05753</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">30.00</td>
+</tr>
+<tr class="even">
+<td align="left">2015-08-15</td>
+<td align="left">EXXON MOBIL 97422554 NORTH HAVEN, CT</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">4.19</td>
+</tr>
+<tr class="odd">
+<td align="left">2015-08-13</td>
+<td align="left">Mobil, 220 Court St, Middlebury, VT 05753</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">17.10</td>
+</tr>
+<tr class="even">
+<td align="left">2015-08-01</td>
+<td align="left">Mobil, 220 Court St, Middlebury, VT 05753</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">19.30</td>
+</tr>
+<tr class="odd">
+<td align="left">2015-12-29</td>
+<td align="left">Shell, 2577 Casa Blanca Rd, Bapchule, AZ 85121</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">32.67</td>
+</tr>
+<tr class="even">
+<td align="left">2016-01-29</td>
+<td align="left">QT 1454 91014548 TUCSON, AZ</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">31.52</td>
+</tr>
+<tr class="odd">
+<td align="left">2016-02-14</td>
+<td align="left">CIRCLE K 01985 TUCSON, AZ</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">19.44</td>
+</tr>
+<tr class="even">
+<td align="left">2016-03-30</td>
+<td align="left">SAFEWAY FUEL 10016848 TUCSON, AZ</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">30.00</td>
+</tr>
+<tr class="odd">
+<td align="left">2016-03-04</td>
+<td align="left">CIRCLE K 02928 ORACLE, AZ</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">25.54</td>
+</tr>
+<tr class="even">
+<td align="left">2016-04-25</td>
+<td align="left">Shell, 2577 Casa Blanca Rd, Bapchule, AZ 85121</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">38.40</td>
+</tr>
+<tr class="odd">
+<td align="left">2016-04-20</td>
+<td align="left">Shell, 4301 E Broadway Blvd, Tucson, AZ 85711</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">37.56</td>
+</tr>
+<tr class="even">
+<td align="left">2016-05-28</td>
+<td align="left">Shell, 4301 E Broadway Blvd, Tucson, AZ 85711</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">40.34</td>
+</tr>
+<tr class="odd">
+<td align="left">2016-05-20</td>
+<td align="left">Shell, 4301 E Broadway Blvd, Tucson, AZ 85711</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">34.93</td>
+</tr>
+<tr class="even">
+<td align="left">2016-05-04</td>
+<td align="left">QUIK MART FUEL TUCSON, AZ</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">39.84</td>
+</tr>
+<tr class="odd">
+<td align="left">2016-06-26</td>
+<td align="left">SAFEWAY FUEL 10016848 TUCSON, AZ</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">39.43</td>
+</tr>
+<tr class="even">
+<td align="left">2016-06-17</td>
+<td align="left">SHELL OIL PICACHO, AZ</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">28.51</td>
+</tr>
+<tr class="odd">
+<td align="left">2016-06-14</td>
+<td align="left">SHELL OIL KINGMAN, AZ</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">46.06</td>
+</tr>
+<tr class="even">
+<td align="left">2016-06-13</td>
+<td align="left">TEXACO 0356205 TUSAYAN, AZ</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">49.75</td>
+</tr>
+<tr class="odd">
+<td align="left">2016-06-12</td>
+<td align="left">Shell, 4301 E Broadway Blvd, Tucson, AZ 85711</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">36.43</td>
+</tr>
+<tr class="even">
+<td align="left">2016-06-07</td>
+<td align="left">Shell, 4301 E Broadway Blvd, Tucson, AZ 85711</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">40.29</td>
+</tr>
+<tr class="odd">
+<td align="left">2016-06-04</td>
+<td align="left">Shell, 4301 E Broadway Blvd, Tucson, AZ 85711</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">35.55</td>
+</tr>
+<tr class="even">
+<td align="left">2016-07-29</td>
+<td align="left">CIRCLE K 02939 TUCSON, AZ</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">12.95</td>
+</tr>
+<tr class="odd">
+<td align="left">2016-07-26</td>
+<td align="left">QT 1452 91014522 TUCSON, AZ</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">8.22</td>
+</tr>
+<tr class="even">
+<td align="left">2016-08-17</td>
+<td align="left">LUKOIL 57237 HIGHLAND PARK, NJ</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">33.00</td>
+</tr>
+<tr class="odd">
+<td align="left">2016-08-15</td>
+<td align="left">BP</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">33.23</td>
+</tr>
+<tr class="even">
+<td align="left">2016-08-15</td>
+<td align="left">EXXON MOBIL</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">27.53</td>
+</tr>
+<tr class="odd">
+<td align="left">2016-08-15</td>
+<td align="left">SHELL OIL</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">10.58</td>
+</tr>
+<tr class="even">
+<td align="left">2016-08-12</td>
+<td align="left">BEST MART</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">35.39</td>
+</tr>
+<tr class="odd">
+<td align="left">2016-08-12</td>
+<td align="left">SPEEDWAY</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">23.18</td>
+</tr>
+<tr class="even">
+<td align="left">2016-08-12</td>
+<td align="left">VICTORY MART</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">28.90</td>
+</tr>
+<tr class="odd">
+<td align="left">2016-08-11</td>
+<td align="left">LOVE’S COUNTRY</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">20.00</td>
+</tr>
+<tr class="even">
+<td align="left">2016-08-10</td>
+<td align="left">CONOCO - CROSSROAD</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">32.95</td>
+</tr>
+<tr class="odd">
+<td align="left">2016-08-10</td>
+<td align="left">EXXON MOBIL</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">35.11</td>
+</tr>
+<tr class="even">
+<td align="left">2016-08-10</td>
+<td align="left">MINOR FOOD MART</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">22.18</td>
+</tr>
+<tr class="odd">
+<td align="left">2016-08-10</td>
+<td align="left">SHELL OIL</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">31.38</td>
+</tr>
+<tr class="even">
+<td align="left">2016-08-09</td>
+<td align="left">LOVE’S COUNTRY 00002634 LAWTON, OK</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">27.15</td>
+</tr>
+<tr class="odd">
+<td align="left">2016-08-09</td>
+<td align="left">LOVE’S COUNTRY 00002634 LAWTON, OK</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">4.88</td>
+</tr>
+<tr class="even">
+<td align="left">2016-08-08</td>
+<td align="left">CIRCLE K</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">4.67</td>
+</tr>
+<tr class="odd">
+<td align="left">2016-08-08</td>
+<td align="left">CORNER STORE</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">33.84</td>
+</tr>
+<tr class="even">
+<td align="left">2016-08-08</td>
+<td align="left">SHELL</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">4.58</td>
+</tr>
+<tr class="odd">
+<td align="left">2016-09-26</td>
+<td align="left">LUKOIL 57237 HIGHLAND PARK, NJ S586269862786850</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">36.89</td>
+</tr>
+<tr class="even">
+<td align="left">2016-09-15</td>
+<td align="left">LUKOIL</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">36.01</td>
+</tr>
+<tr class="odd">
+<td align="left">2016-09-02</td>
+<td align="left">LUKOIL</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">36.03</td>
+</tr>
+<tr class="even">
+<td align="left">2016-10-24</td>
+<td align="left">LUKOIL 57237 HIGHLAND PARK, NJ S306295826869673</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">39.35</td>
+</tr>
+<tr class="odd">
+<td align="left">2016-10-14</td>
+<td align="left">LUKOIL 57237 HIGHLAND PARK, NJ S307088839316717</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">40.00</td>
+</tr>
+<tr class="even">
+<td align="left">2016-11-28</td>
+<td align="left">LUKOIL 57237 HIGHLAND PARK, NJ S466332781700596</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">40.19</td>
+</tr>
+<tr class="odd">
+<td align="left">2016-11-14</td>
+<td align="left">LUKOIL 57237 HIGHLAND PARK, NJ</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">42.68</td>
+</tr>
+<tr class="even">
+<td align="left">2016-11-02</td>
+<td align="left">LUKOIL 57237 HIGHLAND PARK, NJ S307088839316717</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">41.55</td>
+</tr>
+<tr class="odd">
+<td align="left">2016-12-23</td>
+<td align="left">LUKOIL 57237 HIGHLAND PARK, NJ S306357466438249</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">43.89</td>
+</tr>
+<tr class="even">
+<td align="left">2016-12-12</td>
+<td align="left">LUKOIL 57237 HIGHLAND PARK, NJ S307088839316717</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">43.02</td>
+</tr>
+<tr class="odd">
+<td align="left">2017-01-27</td>
+<td align="left">LUKOIL 57237 HIGHLAND PARK, NJ S587026663652225</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">40.25</td>
+</tr>
+<tr class="even">
+<td align="left">2017-01-13</td>
+<td align="left">LUKOIL 57237 HIGHLAND PARK, NJ S307088839316717</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">44.50</td>
+</tr>
+<tr class="odd">
+<td align="left">2017-01-03</td>
+<td align="left">LUKOIL 57237 HIGHLAND PARK, NJ S307088839316717</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">39.01</td>
+</tr>
+<tr class="even">
+<td align="left">2017-02-20</td>
+<td align="left">Raceway, 60 Raritan Ave, Highland Park, NJ 08904</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">2.13</td>
+</tr>
+<tr class="odd">
+<td align="left">2017-02-16</td>
+<td align="left">LUKOIL 57237 HIGHLAND PARK, NJ S307088839316717</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">40.67</td>
+</tr>
+<tr class="even">
+<td align="left">2017-02-06</td>
+<td align="left">LUKOIL 57237 HIGHLAND PARK, NJ S307088839316717</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">43.10</td>
+</tr>
+<tr class="odd">
+<td align="left">2017-03-30</td>
+<td align="left">LUKOIL 57237 HIGHLAND PARK, NJ S307088839316717</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">42.61</td>
+</tr>
+<tr class="even">
+<td align="left">2017-03-20</td>
+<td align="left">LUKOIL 57237 HIGHLAND PARK, NJ S307088839316717</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">42.80</td>
+</tr>
+<tr class="odd">
+<td align="left">2017-03-10</td>
+<td align="left">LUKOIL 57237 HIGHLAND PARK, NJ S307088839316717</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">42.33</td>
+</tr>
+<tr class="even">
+<td align="left">2017-03-01</td>
+<td align="left">LUKOIL 57237 HIGHLAND PARK, NJ S307088839316717</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">39.90</td>
+</tr>
+<tr class="odd">
+<td align="left">2017-04-23</td>
+<td align="left">EXXON MOBIL 47875372 NEWARK, DE</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">20.00</td>
+</tr>
+<tr class="even">
+<td align="left">2017-04-21</td>
+<td align="left">LUKOIL 57237 HIGHLAND PARK, NJ S307088839316717</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">43.94</td>
+</tr>
+<tr class="odd">
+<td align="left">2017-04-10</td>
+<td align="left">LUKOIL 57237 HIGHLAND PARK, NJ S307088839316717</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">39.41</td>
+</tr>
+<tr class="even">
+<td align="left">2017-05-05</td>
+<td align="left">Raceway, 1555 NJ-27, Edison, NJ 08817</td>
+<td align="right">247.0</td>
+<td align="right">137414</td>
+<td align="right">2.859</td>
+<td align="right">17.998</td>
+<td align="right">51.46</td>
+</tr>
+<tr class="odd">
+<td align="left">2017-03-29</td>
+<td align="left">Lukoil 702 raritan ave, highland park NJ 08904</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">2.199</td>
+<td align="right">19.378</td>
+<td align="right">42.61</td>
+</tr>
+<tr class="even">
+<td align="left">2017-04-09</td>
+<td align="left">Lukoil 702 raritan ave highland park NJ 08904</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">2.359</td>
+<td align="right">16.705</td>
+<td align="right">39.41</td>
+</tr>
+<tr class="odd">
+<td align="left">2016-10-21</td>
+<td align="left">lukoil 702 raritan ave highland park nj 08904</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">2.039</td>
+<td align="right">19.301</td>
+<td align="right">39.35</td>
+</tr>
+<tr class="even">
+<td align="left">2017-05-18</td>
+<td align="left">Lukoil 702 raritan ave highland Park nj 08904</td>
+<td align="right">248.5</td>
+<td align="right">137662</td>
+<td align="right">2.299</td>
+<td align="right">19.575</td>
+<td align="right">45.00</td>
+</tr>
+</tbody>
+</table>
 <pre class="r"><code># Total miles driven as a function of time 
 gLog %&gt;%
   na.omit() %&gt;%
@@ -277,17 +943,44 @@ gLog %&gt;%
     geom_point() + 
     theme_bw()</code></pre>
 <p><img src="index_files/figure-html/plotTotalMiles-2.png" width="960" style="display: block; margin: auto;" /></p>
-<pre class="r"><code># plot it
-leaflet(data = gLog, width = 910, height = 500) %&gt;% 
+<pre class="r"><code>gLog %&gt;%
+  na.omit() %&gt;% 
+  select(., date, milesDrivenTank, gallonsPurchased) %&gt;%
+  mutate(., mpg = milesDrivenTank / gallonsPurchased) %&gt;%
+  ggplot(., aes(x = date, y = mpg)) + 
+    geom_path()</code></pre>
+<p><img src="index_files/figure-html/myMPG-1.png" width="960" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>leaflet(data = gLog, width = 910, height = 500) %&gt;% 
   setView(lat = 36, lng = -88, zoom = 4) %&gt;%
   addTiles() %&gt;%
   addMarkers(~Longitude, ~Latitude, popup = ~as.character(location))</code></pre>
-<div id="htmlwidget-034c640ae47d9ed4adb2" style="width:910px;height:500px;" class="leaflet html-widget"></div>
-<script type="application/json" data-for="htmlwidget-034c640ae47d9ed4adb2">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"setView":[[36,-88],4,[]],"calls":[{"method":"addTiles","args":["//{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"minZoom":0,"maxZoom":18,"maxNativeZoom":null,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"continuousWorld":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":null,"unloadInvisibleTiles":null,"updateWhenIdle":null,"detectRetina":false,"reuseTiles":false,"attribution":"&copy; <a href=\"http://openstreetmap.org\">OpenStreetMap<\/a> contributors, <a href=\"http://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA<\/a>"}]},{"method":"addMarkers","args":[[32.2364654,44.0027178,44.012139,44.0027178,44.012139,41.4020913,44.0027178,44.0027178,33.117389,32.258025,32.2213006,31.9011614,32.6195025,33.117389,32.221871,32.221871,32.221871,32.149359,31.9011614,32.649536,35.195064,35.9745896,32.221871,32.221871,32.221871,32.2364654,32.2365879,40.5010671,42.417294,30.119498,29.7602374,30.3788465,39.792738,35.3922444,38.723456,32.7512914,30.119498,35.719371,29.7602374,34.7136864,34.7136864,35.1909575,30.2229083,29.759324,40.5010671,39.9605204,39.9605204,40.5010671,39.9605204,40.5010671,40.5010671,39.9605204,40.5010671,39.9605204,40.5010671,39.9605204,39.9605204,40.4978078,39.9605204,39.9605204,40.5010671,39.9605204,39.9605204,39.9605204,40.8288693,39.9605204,39.9605204,40.5070116,40.5010671,40.5010671,40.5010671,40.5010671],[-110.9248561,-73.1556335,-73.164289,-73.1556335,-73.164289,-72.8484001,-73.1556335,-73.1556335,-111.848738,-110.960634,-110.9793215,-110.99423,-110.7951058,-111.848738,-110.90054,-110.90054,-110.90054,-110.9100423,-110.99423,-111.393663,-114.074113,-112.124884,-110.90054,-110.90054,-110.90054,-110.9248561,-110.8822692,-74.4220661,-82.9101706,-94.6399409,-95.3654938,-89.0937904,-86.250822,-97.7428365,-104.729262,-99.8973405,-94.6399409,-88.633707,-95.3654938,-98.4016495,-98.4016495,-80.7621614,-92.6546246,-95.367318,-74.4220661,-75.1376991,-75.1376991,-74.4220661,-75.1376991,-74.4220661,-74.4220661,-75.1376991,-74.4220661,-75.1376991,-74.4220661,-75.1376991,-75.1376991,-74.4337849,-75.1376991,-75.1376991,-74.4220661,-75.1376991,-75.1376991,-75.1376991,-73.6475496,-75.1376991,-75.1376991,-74.4143646,-74.4220661,-74.4220661,-74.4220661,-74.4220661],null,null,null,{"clickable":true,"draggable":false,"keyboard":true,"title":"","alt":"","zIndexOffset":0,"opacity":1,"riseOnHover":false,"riseOffset":250},["CIRCLE K 02939 TUCSON, AZ","Mobil, 220 Court St, Middlebury, VT 05753","Shell, 25 Court St, Middlebury, VT 05753","Mobil, 220 Court St, Middlebury, VT 05753","Shell, 25 Court St, Middlebury, VT 05753","EXXON MOBIL 97422554 NORTH HAVEN, CT","Mobil, 220 Court St, Middlebury, VT 05753","Mobil, 220 Court St, Middlebury, VT 05753","Shell, 2577 Casa Blanca Rd, Bapchule, AZ 85121","QT 1454 91014548 TUCSON, AZ","CIRCLE K 01985 TUCSON, AZ","SAFEWAY FUEL 10016848 TUCSON, AZ","CIRCLE K 02928 ORACLE, AZ","Shell, 2577 Casa Blanca Rd, Bapchule, AZ 85121","Shell, 4301 E Broadway Blvd, Tucson, AZ 85711","Shell, 4301 E Broadway Blvd, Tucson, AZ 85711","Shell, 4301 E Broadway Blvd, Tucson, AZ 85711","QUIK MART FUEL TUCSON, AZ","SAFEWAY FUEL 10016848 TUCSON, AZ","SHELL OIL PICACHO, AZ","SHELL OIL KINGMAN, AZ","TEXACO 0356205 TUSAYAN, AZ","Shell, 4301 E Broadway Blvd, Tucson, AZ 85711","Shell, 4301 E Broadway Blvd, Tucson, AZ 85711","Shell, 4301 E Broadway Blvd, Tucson, AZ 85711","CIRCLE K 02939 TUCSON, AZ","QT 1452 91014522 TUCSON, AZ","LUKOIL 57237 HIGHLAND PARK, NJ","BP","EXXON MOBIL","SHELL OIL","BEST MART","SPEEDWAY","VICTORY MART","LOVE'S COUNTRY","CONOCO - CROSSROAD","EXXON MOBIL","MINOR FOOD MART","SHELL OIL","LOVE'S COUNTRY 00002634 LAWTON, OK","LOVE'S COUNTRY 00002634 LAWTON, OK","CIRCLE K","CORNER STORE","SHELL","LUKOIL 57237 HIGHLAND PARK, NJ S586269862786850","LUKOIL","LUKOIL","LUKOIL 57237 HIGHLAND PARK, NJ S306295826869673","LUKOIL 57237 HIGHLAND PARK, NJ S307088839316717","LUKOIL 57237 HIGHLAND PARK, NJ S466332781700596","LUKOIL 57237 HIGHLAND PARK, NJ","LUKOIL 57237 HIGHLAND PARK, NJ S307088839316717","LUKOIL 57237 HIGHLAND PARK, NJ S306357466438249","LUKOIL 57237 HIGHLAND PARK, NJ S307088839316717","LUKOIL 57237 HIGHLAND PARK, NJ S587026663652225","LUKOIL 57237 HIGHLAND PARK, NJ S307088839316717","LUKOIL 57237 HIGHLAND PARK, NJ S307088839316717","Raceway, 60 Raritan Ave, Highland Park, NJ 08904","LUKOIL 57237 HIGHLAND PARK, NJ S307088839316717","LUKOIL 57237 HIGHLAND PARK, NJ S307088839316717","LUKOIL 57237 HIGHLAND PARK, NJ S307088839316717","LUKOIL 57237 HIGHLAND PARK, NJ S307088839316717","LUKOIL 57237 HIGHLAND PARK, NJ S307088839316717","LUKOIL 57237 HIGHLAND PARK, NJ S307088839316717","EXXON MOBIL 47875372 NEWARK, DE","LUKOIL 57237 HIGHLAND PARK, NJ S307088839316717","LUKOIL 57237 HIGHLAND PARK, NJ S307088839316717","Raceway, 1555 NJ-27, Edison, NJ 08817","Lukoil 702 raritan ave, highland park NJ 08904","Lukoil 702 raritan ave highland park NJ 08904","lukoil 702 raritan ave highland park nj 08904","Lukoil 702 raritan ave highland Park nj 08904"],null,null,null,null,null,null]}],"limits":{"lat":[29.759324,44.012139],"lng":[-114.074113,-72.8484001]}},"evals":[],"jsHooks":[]}</script>
-<pre class="r"><code>gLog %&gt;% 
-    datatable(callback = JS(&quot;return table;&quot;))</code></pre>
-<div id="htmlwidget-9c2f2c676a2dd12d97ed" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-9c2f2c676a2dd12d97ed">{"x":{"filter":"none","data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36","37","38","39","40","41","42","43","44","45","46","47","48","49","50","51","52","53","54","55","56","57","58","59","60","61","62","63","64","65","66","67","68","69","70","71","72"],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,"5/5/2017 9:45:51","5/5/2017 14:23:45","5/5/2017 14:25:26","5/5/2017 14:26:47","5/18/2017 7:51:18"],["2015-06-13","2015-07-25","2015-07-24","2015-07-11","2015-08-20","2015-08-15","2015-08-13","2015-08-01","2015-12-29","2016-01-29","2016-02-14","2016-03-30","2016-03-04","2016-04-25","2016-04-20","2016-05-28","2016-05-20","2016-05-04","2016-06-26","2016-06-17","2016-06-14","2016-06-13","2016-06-12","2016-06-07","2016-06-04","2016-07-29","2016-07-26","2016-08-17","2016-08-15","2016-08-15","2016-08-15","2016-08-12","2016-08-12","2016-08-12","2016-08-11","2016-08-10","2016-08-10","2016-08-10","2016-08-10","2016-08-09","2016-08-09","2016-08-08","2016-08-08","2016-08-08","2016-09-26","2016-09-15","2016-09-02","2016-10-24","2016-10-14","2016-11-28","2016-11-14","2016-11-02","2016-12-23","2016-12-12","2017-01-27","2017-01-13","2017-01-03","2017-02-20","2017-02-16","2017-02-06","2017-03-30","2017-03-20","2017-03-10","2017-03-01","2017-04-23","2017-04-21","2017-04-10","2017-05-05","2017-03-29","2017-04-09","2016-10-21","2017-05-18"],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,0,0,0,0,0],["CIRCLE K 02939 TUCSON, AZ","Mobil, 220 Court St, Middlebury, VT 05753","Shell, 25 Court St, Middlebury, VT 05753","Mobil, 220 Court St, Middlebury, VT 05753","Shell, 25 Court St, Middlebury, VT 05753","EXXON MOBIL 97422554 NORTH HAVEN, CT","Mobil, 220 Court St, Middlebury, VT 05753","Mobil, 220 Court St, Middlebury, VT 05753","Shell, 2577 Casa Blanca Rd, Bapchule, AZ 85121","QT 1454 91014548 TUCSON, AZ","CIRCLE K 01985 TUCSON, AZ","SAFEWAY FUEL 10016848 TUCSON, AZ","CIRCLE K 02928 ORACLE, AZ","Shell, 2577 Casa Blanca Rd, Bapchule, AZ 85121","Shell, 4301 E Broadway Blvd, Tucson, AZ 85711","Shell, 4301 E Broadway Blvd, Tucson, AZ 85711","Shell, 4301 E Broadway Blvd, Tucson, AZ 85711","QUIK MART FUEL TUCSON, AZ","SAFEWAY FUEL 10016848 TUCSON, AZ","SHELL OIL PICACHO, AZ","SHELL OIL KINGMAN, AZ","TEXACO 0356205 TUSAYAN, AZ","Shell, 4301 E Broadway Blvd, Tucson, AZ 85711","Shell, 4301 E Broadway Blvd, Tucson, AZ 85711","Shell, 4301 E Broadway Blvd, Tucson, AZ 85711","CIRCLE K 02939 TUCSON, AZ","QT 1452 91014522 TUCSON, AZ","LUKOIL 57237 HIGHLAND PARK, NJ","BP","EXXON MOBIL","SHELL OIL","BEST MART","SPEEDWAY","VICTORY MART","LOVE'S COUNTRY","CONOCO - CROSSROAD","EXXON MOBIL","MINOR FOOD MART","SHELL OIL","LOVE'S COUNTRY 00002634 LAWTON, OK","LOVE'S COUNTRY 00002634 LAWTON, OK","CIRCLE K","CORNER STORE","SHELL","LUKOIL 57237 HIGHLAND PARK, NJ S586269862786850","LUKOIL","LUKOIL","LUKOIL 57237 HIGHLAND PARK, NJ S306295826869673","LUKOIL 57237 HIGHLAND PARK, NJ S307088839316717","LUKOIL 57237 HIGHLAND PARK, NJ S466332781700596","LUKOIL 57237 HIGHLAND PARK, NJ","LUKOIL 57237 HIGHLAND PARK, NJ S307088839316717","LUKOIL 57237 HIGHLAND PARK, NJ S306357466438249","LUKOIL 57237 HIGHLAND PARK, NJ S307088839316717","LUKOIL 57237 HIGHLAND PARK, NJ S587026663652225","LUKOIL 57237 HIGHLAND PARK, NJ S307088839316717","LUKOIL 57237 HIGHLAND PARK, NJ S307088839316717","Raceway, 60 Raritan Ave, Highland Park, NJ 08904","LUKOIL 57237 HIGHLAND PARK, NJ S307088839316717","LUKOIL 57237 HIGHLAND PARK, NJ S307088839316717","LUKOIL 57237 HIGHLAND PARK, NJ S307088839316717","LUKOIL 57237 HIGHLAND PARK, NJ S307088839316717","LUKOIL 57237 HIGHLAND PARK, NJ S307088839316717","LUKOIL 57237 HIGHLAND PARK, NJ S307088839316717","EXXON MOBIL 47875372 NEWARK, DE","LUKOIL 57237 HIGHLAND PARK, NJ S307088839316717","LUKOIL 57237 HIGHLAND PARK, NJ S307088839316717","Raceway, 1555 NJ-27, Edison, NJ 08817","Lukoil 702 raritan ave, highland park NJ 08904","Lukoil 702 raritan ave highland park NJ 08904","lukoil 702 raritan ave highland park nj 08904","Lukoil 702 raritan ave highland Park nj 08904"],[32.2364654,44.0027178,44.012139,44.0027178,44.012139,41.4020913,44.0027178,44.0027178,33.117389,32.258025,32.2213006,31.9011614,32.6195025,33.117389,32.221871,32.221871,32.221871,32.149359,31.9011614,32.649536,35.195064,35.9745896,32.221871,32.221871,32.221871,32.2364654,32.2365879,40.5010671,42.417294,30.119498,29.7602374,30.3788465,39.792738,35.3922444,38.723456,32.7512914,30.119498,35.719371,29.7602374,34.7136864,34.7136864,35.1909575,30.2229083,29.759324,40.5010671,39.9605204,39.9605204,40.5010671,39.9605204,40.5010671,40.5010671,39.9605204,40.5010671,39.9605204,40.5010671,39.9605204,39.9605204,40.4978078,39.9605204,39.9605204,40.5010671,39.9605204,39.9605204,39.9605204,40.8288693,39.9605204,39.9605204,40.5070116,40.5010671,40.5010671,40.5010671,40.5010671],[-110.9248561,-73.1556335,-73.164289,-73.1556335,-73.164289,-72.8484001,-73.1556335,-73.1556335,-111.848738,-110.960634,-110.9793215,-110.99423,-110.7951058,-111.848738,-110.90054,-110.90054,-110.90054,-110.9100423,-110.99423,-111.393663,-114.074113,-112.124884,-110.90054,-110.90054,-110.90054,-110.9248561,-110.8822692,-74.4220661,-82.9101706,-94.6399409,-95.3654938,-89.0937904,-86.250822,-97.7428365,-104.729262,-99.8973405,-94.6399409,-88.633707,-95.3654938,-98.4016495,-98.4016495,-80.7621614,-92.6546246,-95.367318,-74.4220661,-75.1376991,-75.1376991,-74.4220661,-75.1376991,-74.4220661,-74.4220661,-75.1376991,-74.4220661,-75.1376991,-74.4220661,-75.1376991,-75.1376991,-74.4337849,-75.1376991,-75.1376991,-74.4220661,-75.1376991,-75.1376991,-75.1376991,-73.6475496,-75.1376991,-75.1376991,-74.4143646,-74.4220661,-74.4220661,-74.4220661,-74.4220661],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,247,null,null,null,248.5],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,137414,null,null,null,137662],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,2.859,2.199,2.359,2.039,2.299],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,17.998,19.378,16.705,19.301,19.575],[3.79,6.42,45.56,18.12,30,4.19,17.1,19.3,32.67,31.52,19.44,30,25.54,38.4,37.56,40.34,34.93,39.84,39.43,28.51,46.06,49.75,36.43,40.29,35.55,12.95,8.22,33,33.23,27.53,10.58,35.39,23.18,28.9,20,32.95,35.11,22.18,31.38,27.15,4.88,4.67,33.84,4.58,36.89,36.01,36.03,39.35,40,40.19,42.68,41.55,43.89,43.02,40.25,44.5,39.01,2.13,40.67,43.1,42.61,42.8,42.33,39.9,20,43.94,39.41,51.46,42.61,39.41,39.35,45],[6,7,7,7,8,8,8,8,12,1,2,3,3,4,4,5,5,5,6,6,6,6,6,6,6,7,7,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,9,9,9,10,10,11,11,11,12,12,1,1,1,2,2,2,3,3,3,3,4,4,4,5,3,4,10,5],["june","july","july","july","aug","aug","aug","aug","dec","jan","feb","march","march","april","april","may","may","may","june","june","june","june","june","june","june","july","july","aug","aug","aug","aug","aug","aug","aug","aug","aug","aug","aug","aug","aug","aug","aug","aug","aug","sept","sept","sept","oct","oct","nov","nov","nov","dec","dec","jan","jan","jan","feb","feb","feb","march","march","march","march","april","april","april","may","march","april","oct","may"],[2015,2015,2015,2015,2015,2015,2015,2015,2015,2016,2016,2016,2016,2016,2016,2016,2016,2016,2016,2016,2016,2016,2016,2016,2016,2016,2016,2016,2016,2016,2016,2016,2016,2016,2016,2016,2016,2016,2016,2016,2016,2016,2016,2016,2016,2016,2016,2016,2016,2016,2016,2016,2016,2016,2017,2017,2017,2017,2017,2017,2017,2017,2017,2017,2017,2017,2017,2017,2017,2017,2016,2017]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>Timestamp<\/th>\n      <th>date<\/th>\n      <th>time<\/th>\n      <th>location<\/th>\n      <th>Latitude<\/th>\n      <th>Longitude<\/th>\n      <th>milesDrivenTank<\/th>\n      <th>milesDrivenTotal<\/th>\n      <th>pricePerGallon<\/th>\n      <th>gallonsPurchased<\/th>\n      <th>totalPrice<\/th>\n      <th>monthNum<\/th>\n      <th>monthName<\/th>\n      <th>year<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[3,5,6,7,8,9,10,11,12,14]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false},"callback":"function(table) {\nreturn table;\n}","selection":{"mode":"multiple","selected":null,"target":"row"}},"evals":["callback"],"jsHooks":[]}</script>
+<div id="htmlwidget-f860254c1209d18b3c04" style="width:910px;height:500px;" class="leaflet html-widget"></div>
+<script type="application/json" data-for="htmlwidget-f860254c1209d18b3c04">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"setView":[[36,-88],4,[]],"calls":[{"method":"addTiles","args":["//{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"minZoom":0,"maxZoom":18,"maxNativeZoom":null,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"continuousWorld":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":null,"unloadInvisibleTiles":null,"updateWhenIdle":null,"detectRetina":false,"reuseTiles":false,"attribution":"&copy; <a href=\"http://openstreetmap.org\">OpenStreetMap<\/a> contributors, <a href=\"http://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA<\/a>"}]},{"method":"addMarkers","args":[[32.2364654,44.0027178,44.012139,44.0027178,44.012139,41.4020913,44.0027178,44.0027178,33.117389,32.258025,32.2213006,31.9011614,32.6195025,33.117389,32.221871,32.221871,32.221871,32.149359,31.9011614,32.649536,35.195064,35.9745896,32.221871,32.221871,32.221871,32.2364654,32.2365879,40.5010671,42.417294,30.119498,29.7602374,30.3788465,39.792738,35.3922444,38.723456,32.7512914,30.119498,35.719371,29.7602374,34.7136864,34.7136864,35.1909575,30.2229083,29.759324,40.5010671,39.9605204,39.9605204,40.5010671,39.9605204,40.5010671,40.5010671,39.9605204,40.5010671,39.9605204,40.5010671,39.9605204,39.9605204,40.4978078,39.9605204,39.9605204,40.5010671,39.9605204,39.9605204,39.9605204,40.8288693,39.9605204,39.9605204,40.5070116,40.5010671,40.5010671,40.5010671,40.5010671],[-110.9248561,-73.1556335,-73.164289,-73.1556335,-73.164289,-72.8484001,-73.1556335,-73.1556335,-111.848738,-110.960634,-110.9793215,-110.99423,-110.7951058,-111.848738,-110.90054,-110.90054,-110.90054,-110.9100423,-110.99423,-111.393663,-114.074113,-112.124884,-110.90054,-110.90054,-110.90054,-110.9248561,-110.8822692,-74.4220661,-82.9101706,-94.6399409,-95.3654938,-89.0937904,-86.250822,-97.7428365,-104.729262,-99.8973405,-94.6399409,-88.633707,-95.3654938,-98.4016495,-98.4016495,-80.7621614,-92.6546246,-95.367318,-74.4220661,-75.1376991,-75.1376991,-74.4220661,-75.1376991,-74.4220661,-74.4220661,-75.1376991,-74.4220661,-75.1376991,-74.4220661,-75.1376991,-75.1376991,-74.4337849,-75.1376991,-75.1376991,-74.4220661,-75.1376991,-75.1376991,-75.1376991,-73.6475496,-75.1376991,-75.1376991,-74.4143646,-74.4220661,-74.4220661,-74.4220661,-74.4220661],null,null,null,{"clickable":true,"draggable":false,"keyboard":true,"title":"","alt":"","zIndexOffset":0,"opacity":1,"riseOnHover":false,"riseOffset":250},["CIRCLE K 02939 TUCSON, AZ","Mobil, 220 Court St, Middlebury, VT 05753","Shell, 25 Court St, Middlebury, VT 05753","Mobil, 220 Court St, Middlebury, VT 05753","Shell, 25 Court St, Middlebury, VT 05753","EXXON MOBIL 97422554 NORTH HAVEN, CT","Mobil, 220 Court St, Middlebury, VT 05753","Mobil, 220 Court St, Middlebury, VT 05753","Shell, 2577 Casa Blanca Rd, Bapchule, AZ 85121","QT 1454 91014548 TUCSON, AZ","CIRCLE K 01985 TUCSON, AZ","SAFEWAY FUEL 10016848 TUCSON, AZ","CIRCLE K 02928 ORACLE, AZ","Shell, 2577 Casa Blanca Rd, Bapchule, AZ 85121","Shell, 4301 E Broadway Blvd, Tucson, AZ 85711","Shell, 4301 E Broadway Blvd, Tucson, AZ 85711","Shell, 4301 E Broadway Blvd, Tucson, AZ 85711","QUIK MART FUEL TUCSON, AZ","SAFEWAY FUEL 10016848 TUCSON, AZ","SHELL OIL PICACHO, AZ","SHELL OIL KINGMAN, AZ","TEXACO 0356205 TUSAYAN, AZ","Shell, 4301 E Broadway Blvd, Tucson, AZ 85711","Shell, 4301 E Broadway Blvd, Tucson, AZ 85711","Shell, 4301 E Broadway Blvd, Tucson, AZ 85711","CIRCLE K 02939 TUCSON, AZ","QT 1452 91014522 TUCSON, AZ","LUKOIL 57237 HIGHLAND PARK, NJ","BP","EXXON MOBIL","SHELL OIL","BEST MART","SPEEDWAY","VICTORY MART","LOVE'S COUNTRY","CONOCO - CROSSROAD","EXXON MOBIL","MINOR FOOD MART","SHELL OIL","LOVE'S COUNTRY 00002634 LAWTON, OK","LOVE'S COUNTRY 00002634 LAWTON, OK","CIRCLE K","CORNER STORE","SHELL","LUKOIL 57237 HIGHLAND PARK, NJ S586269862786850","LUKOIL","LUKOIL","LUKOIL 57237 HIGHLAND PARK, NJ S306295826869673","LUKOIL 57237 HIGHLAND PARK, NJ S307088839316717","LUKOIL 57237 HIGHLAND PARK, NJ S466332781700596","LUKOIL 57237 HIGHLAND PARK, NJ","LUKOIL 57237 HIGHLAND PARK, NJ S307088839316717","LUKOIL 57237 HIGHLAND PARK, NJ S306357466438249","LUKOIL 57237 HIGHLAND PARK, NJ S307088839316717","LUKOIL 57237 HIGHLAND PARK, NJ S587026663652225","LUKOIL 57237 HIGHLAND PARK, NJ S307088839316717","LUKOIL 57237 HIGHLAND PARK, NJ S307088839316717","Raceway, 60 Raritan Ave, Highland Park, NJ 08904","LUKOIL 57237 HIGHLAND PARK, NJ S307088839316717","LUKOIL 57237 HIGHLAND PARK, NJ S307088839316717","LUKOIL 57237 HIGHLAND PARK, NJ S307088839316717","LUKOIL 57237 HIGHLAND PARK, NJ S307088839316717","LUKOIL 57237 HIGHLAND PARK, NJ S307088839316717","LUKOIL 57237 HIGHLAND PARK, NJ S307088839316717","EXXON MOBIL 47875372 NEWARK, DE","LUKOIL 57237 HIGHLAND PARK, NJ S307088839316717","LUKOIL 57237 HIGHLAND PARK, NJ S307088839316717","Raceway, 1555 NJ-27, Edison, NJ 08817","Lukoil 702 raritan ave, highland park NJ 08904","Lukoil 702 raritan ave highland park NJ 08904","lukoil 702 raritan ave highland park nj 08904","Lukoil 702 raritan ave highland Park nj 08904"],null,null,null,null,null,null]}],"limits":{"lat":[29.759324,44.012139],"lng":[-114.074113,-72.8484001]}},"evals":[],"jsHooks":[]}</script>
+<pre class="r"><code>usa_center &lt;- as.numeric(geocode(&quot;United States&quot;))</code></pre>
+<pre><code>## Information from URL : http://maps.googleapis.com/maps/api/geocode/json?address=United%20States&amp;sensor=false</code></pre>
+<pre class="r"><code>USAMap &lt;- get_googlemap(center = usa_center, scale = 1, zoom = 4)</code></pre>
+<pre><code>## Map from URL : http://maps.googleapis.com/maps/api/staticmap?center=37.09024,-95.712891&amp;zoom=4&amp;size=640x640&amp;scale=1&amp;maptype=terrain&amp;sensor=false</code></pre>
+<pre class="r"><code>ggmap(USAMap, extent = &quot;panel&quot;) + 
+  stat_density2d(data = gLog, 
+    aes(x = Longitude, y = Latitude, fill=..level.., alpha=..level..),
+                              geom = &quot;polygon&quot;, size = 0.01, bins = 10) + 
+  scale_fill_gradient(low = &quot;red&quot;, high = &quot;green&quot;) +
+  scale_alpha(range = c(0, 0.3), guide = FALSE) + 
+  coord_fixed(0.95) + 
+  theme_minimal()</code></pre>
+<p><img src="index_files/figure-html/plotMapUS2-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>jersey_center &lt;- as.numeric(geocode(&quot;Highland Park, New Jersey&quot;))</code></pre>
+<pre><code>## Information from URL : http://maps.googleapis.com/maps/api/geocode/json?address=Highland%20Park,%20New%20Jersey&amp;sensor=false</code></pre>
+<pre class="r"><code>NJMap &lt;- get_googlemap(center = jersey_center, scale = 1, zoom = 8)</code></pre>
+<pre><code>## Map from URL : http://maps.googleapis.com/maps/api/staticmap?center=40.495938,-74.424318&amp;zoom=8&amp;size=640x640&amp;scale=1&amp;maptype=terrain&amp;sensor=false</code></pre>
+<pre class="r"><code>ggmap(NJMap, extent = &quot;panel&quot;) + 
+  geom_point(aes(x = Longitude, y = Latitude), data = gLog, 
+             col = &quot;blue&quot;, alpha = 0.4, 
+             size = gLog$pricePerGallon) + 
+  scale_size_continuous(range = range(gLog$pricePerGallon)) +
+  coord_fixed(1.1) + 
+  theme_minimal()</code></pre>
+<p><img src="index_files/figure-html/plotMapNJ1-1.png" width="672" style="display: block; margin: auto;" /></p>
 
 
 

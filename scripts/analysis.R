@@ -16,14 +16,17 @@ glimpse(gLog)
 ## @knitr plotTotalMiles
 
 # Total miles driven as a function of time 
-ggplot(gLog, aes(x = date, y = milesDrivenTotal, 
-				 color = monthName, size = milesDrivenTank)) + 
+gLog %>%
+  na.omit() %>%
+  ggplot(., aes(x = date, y = milesDrivenTotal, 
+				color = monthName, size = milesDrivenTank)) + 
 	geom_point() + 
 	theme_bw()
 
 ggplot(gLog, aes(x = date, y = milesDrivenTank, color = pricePerGallon)) + 
 	geom_point() + 
 	theme_bw()
+
 
 
 ## @knitr plotMaps

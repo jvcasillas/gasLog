@@ -23,9 +23,11 @@ gLog %>%
 	geom_point() + 
 	theme_bw()
 
-ggplot(gLog, aes(x = date, y = milesDrivenTank, color = pricePerGallon)) + 
-	geom_point() + 
-	theme_bw()
+gLog %>%
+  na.omit() %>%
+  ggplot(., aes(x = date, y = milesDrivenTank, color = pricePerGallon)) + 
+  geom_point() + 
+  theme_bw()
 
 
 
@@ -53,11 +55,11 @@ ggmap(USAMap, extent = "panel") +
 ## @knitr plotMapNJ1
 
 jersey_center <- as.numeric(geocode("Highland Park, New Jersey"))
-NJMap <- get_googlemap(center = jersey_center, scale = 1, zoom = 8)
+NJMap <- get_googlemap(center = jersey_center, scale = 1, zoom = 6)
 
 ggmap(NJMap, extent = "panel") + 
   geom_point(aes(x = Longitude, y = Latitude), data = gLog, 
-             col = "blue", alpha = 0.4, 
+             col = "blue", alpha = 0.7, 
              size = gLog$pricePerGallon) + 
   scale_size_continuous(range = range(gLog$pricePerGallon)) +
   coord_fixed(1.1) + 
@@ -73,7 +75,7 @@ ggmap(NJMap, extent = "panel") +
 
 gLog %>% 
 	select(., date, location, milesDrivenTank:totalPrice) %>%
-	knitr::kable(.)
+	datatable(.)
 
 
 
@@ -84,5 +86,6 @@ gLog %>%
   select(., date, milesDrivenTank, gallonsPurchased) %>%
   mutate(., mpg = milesDrivenTank / gallonsPurchased) %>%
   ggplot(., aes(x = date, y = mpg)) + 
-    geom_path()
+    geom_path() + 
+	theme_bw()
 
